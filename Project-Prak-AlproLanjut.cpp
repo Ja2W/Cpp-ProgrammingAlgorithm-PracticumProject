@@ -1,3 +1,10 @@
+/*
+==========================================================
+   SISTEM PENCATAT PENGELUARAN MAHASISWA
+   Materi: Struct, Array, Pointer, Searching,
+           Sorting (Bubble Sort), Rekursi, File I/O
+==========================================================
+*/
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -5,7 +12,18 @@
 #include <iomanip>
 using namespace std;
 
+//===================== STRUCT ======================== //baru ditambah
+struct Transaksi{
+    string barang;
+    string tanggal;
+    string kategori;
+    int harga;
+};
 
+// ================ VARIABEL GLOBAL ==================== //baru ditambah
+const int MAKS = 100;
+Transaksi daftar[MAKS]; //Menambahkan array of struct
+int jumlah = 0;
 
 // Function Helper Garis & Judul
 void garis() {
@@ -38,29 +56,108 @@ void namaKelompok(){
 
 // Function Sub-Menu
 void inputTransaksi() {
-
+    system("cls");
     namaKelompok();
     judul("INPUT TRANSAKSI BARU");
 
+    if (jumlah >= MAKS) { //baru ditambah
+        cout << "Data sudah penuh!" << endl;
+    jeda();
+    return;
+    }
+    // Menggunakan Pointer ke array
+    Transaksi* t = &daftar[jumlah];
+    cout << "    Nama barang    : "; cin >> t->barang;
+    cout << "    Tanggal        : "; cin >> t->tanggal;
+    cout << "    Harga(Rp)      : "; cin >> t->harga;
 
+    cout << endl;
+    cout << "  Kategori:" << endl;
+    cout << "  1. Makanan" << endl;
+    cout << "  2. Transport" << endl;
+    cout << "  3. Kuliah" << endl;
+    cout << "  4. Hiburan" << endl;
+    cout << "  Pilih: ";
+    int pilihKat;
+    cin >> pilihKat;
+
+    if      (pilihKat == 1) t->kategori = "Makanan";
+    else if (pilihKat == 2) t->kategori = "Transport";
+    else if (pilihKat == 3) t->kategori = "Kuliah";
+    else if (pilihKat == 4) t->kategori = "Hiburan";
+    else                    t->kategori = "Lainnya";
+
+    jumlah++;
+    cout << endl << "  [OK] Transaksi berhasil disimpan!" << endl;
     jeda();
 }
 
-void tampilSemua() {
-
+// ================ TAMPIL SEMUA =======================
+void tampilSemua() { //baru ditambah
+    system("cls");
     namaKelompok();
     judul("DAFTAR TRANSAKSI");
 
-
+    if (jumlah == 0) {
+        cout << "Belum ada data!" << endl;
+        jeda();
+        return;
+    }
+    cout << "  No  Barang         Tanggal    Kategori     Harga" << endl;
+    garis();
+    Transaksi* ptr = daftar;
+    for (int i = 0; i < jumlah; i++) {
+        cout << "  " << i + 1 << ".  ";
+        cout << ptr[i].barang    << "\t";
+        cout << ptr[i].tanggal   << "\t";
+        cout << ptr[i].kategori  << "\t";
+        cout << "Rp " << ptr[i].harga << endl;
+    }
+    garis();
+    // Hitung total dengan fungsi rekursif
+    int total = totalRekursif(daftar, 0);
+    cout << "  TOTAL PENGELUARAN : Rp " << total << endl;
+    garis();
     jeda();
 }
 
+//================ SEARCHING ========================== //baru ditambah
 void cariTransaksi(){
-
+    system("cls");
     namaKelompok();
     judul("CARI TRANSAKSI");
 
+    cout << "  Cari berdasarkan:" << endl;
+    cout << "  1. Nama Barang" << endl;
+    cout << "  2. Tanggal" << endl;
+    cout << "  Pilih: ";
+    int opt;
+    cin >> opt;
 
+    cout << "  Kata kunci: ";
+    string kunci;
+    cin >> kunci;
+
+    cout << endl;
+    garis();
+    bool ketemu = false;
+
+    for (int i = 0; i < jumlah; i++) {
+        // Pointer ke elemen ke-i
+        Transaksi* p = &daftar[i];
+
+        // Cek apakah kunci cocok
+        string target = (opt == 1) ? p->barang : p->tanggal;
+        if (target == kunci) {
+            cout << "  Barang   : " << p->barang   << endl;
+            cout << "  Tanggal  : " << p->tanggal  << endl;
+            cout << "  Kategori : " << p->kategori << endl;
+            cout << "  Harga    : Rp " << p->harga << endl;
+            garis();
+            ketemu = true;
+        }
+    }
+    if (!ketemu) cout << "  Data tidak ditemukan." << endl;
     jeda();
 }
 
