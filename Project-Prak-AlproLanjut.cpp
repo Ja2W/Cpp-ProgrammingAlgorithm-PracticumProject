@@ -1,10 +1,9 @@
 /*
 ==========================================================
    SISTEM PENCATAT PENGELUARAN MAHASISWA
-   Materi: Struct, Array, Pointer, Searching,
-           Sorting (Bubble Sort), Rekursi, File I/O
 ==========================================================
 */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -12,7 +11,7 @@
 #include <iomanip>
 using namespace std;
 
-//===================== STRUCT ======================== //baru ditambah
+//======= [ Menggunakan Struct ] ======
 struct Transaksi{
     string barang;
     string tanggal;
@@ -20,7 +19,7 @@ struct Transaksi{
     int harga;
 };
 
-// ================ VARIABEL GLOBAL ==================== //baru ditambah
+//======= [ Variabel Global ] =======
 const int MAKS = 100;
 Transaksi daftar[MAKS]; //Menambahkan array of struct
 int jumlah = 0;
@@ -54,7 +53,7 @@ void namaKelompok(){
     cout << "\t================================================\n\n" << endl;
 }
 
-// Function Sub-Menu
+//======= [ Function Sub Menu ] =======
 void inputTransaksi() {
     system("cls");
     namaKelompok();
@@ -65,7 +64,7 @@ void inputTransaksi() {
     jeda();
     return;
     }
-    // Menggunakan Pointer ke array
+   // Menggunakan Pointer ke array
     Transaksi* t = &daftar[jumlah];
     cout << "    Nama barang    : "; cin >> t->barang;
     cout << "    Tanggal        : "; cin >> t->tanggal;
@@ -92,7 +91,7 @@ void inputTransaksi() {
     jeda();
 }
 
-// ================ TAMPIL SEMUA =======================
+// ======= [ Function Tampilan Semua ] ======
 void tampilSemua() { //baru ditambah
     system("cls");
     namaKelompok();
@@ -121,7 +120,7 @@ void tampilSemua() { //baru ditambah
     jeda();
 }
 
-//================ SEARCHING ========================== //baru ditambah
+//======= [ Menggunakan Materi Searching ] =======
 void cariTransaksi(){
     system("cls");
     namaKelompok();
@@ -161,26 +160,80 @@ void cariTransaksi(){
     jeda();
 }
 
+//======= [ Menggunakan Materi Sorting ] =======
 void urutkanTransaksi(){
+   system("cls");
+   namaKelompok();
+   judul("URUTKAN TRANSAKSI");
 
-    namaKelompok();
-    judul("URUTKAN TRANSAKSI");
+   cout << " Urutkan Berdasarkan : " << endl;
+   cout << " 1. Harga (murah ke mahal)" << endl;
+   cout << " 2. Harga (mahal ke murah)" << endl;
+   cout << " 3. Tanggal (lama ke baru)" << endl;
+   cout << " Pilih: ";
+   int opt;
+   cin >> opt;
 
+   //Bubble sort 
+   for (int i = 0; i < jumlah - 1; i++) {
+      for (int j = 0; j < jumlah - i - 1; j++) {
+         Transaksi* a = &daftar[j];
+         Transaksi* b = &daftar[j+1];
 
-    jeda();
+         bool perludiTukar = false;
+         if (opt == 1 && a->harga > b->harga) perludiTukar = true;
+         if (opt == 2 && a->harga < b->harga) perludiTukar = true;
+         if (opt == 3 && a->tanggal > b->tanggal) perludiTukar = true;
+
+         if (perludiTukar {
+            Transaksi temp = *a;
+            *a = *b;
+            *b = temp;
+         }
+      }
+   }
+   cout << endl << " OK! Data Berhasil diurutkan!" << endl;
+   jeda();
 }
 
+//======= [ Function Analisis ] =======
 void analisisPengeluaran(){
+   system("cls");
+   namaKelompok();
+   judul("ANALISIS PENGELUARAN");
 
-    namaKelompok();
-    judul("ANALISIS PENGELUARAN");
+   if (jumlah == 0) {
+        cout << "  Belum ada data." << endl;
+        jeda();
+        return;
+    }
 
+   int totMakanan = 0, totTransport = 0, totKuliah = 0, totHiburan = 0;
+    for (int i = 0; i < jumlah; i++) {
+        Transaksi* p = &daftar[i];
+        if (p->kategori == "Makanan")   totMakanan   += p->harga;
+        if (p->kategori == "Transport") totTransport += p->harga;
+        if (p->kategori == "Kuliah")    totKuliah    += p->harga;
+        if (p->kategori == "Hiburan")   totHiburan   += p->harga;
+    }
 
+    cout << "  Per Kategori:" << endl;
+    garis();
+    cout << "  Makanan   : Rp " << totMakanan   << endl;
+    cout << "  Transport : Rp " << totTransport << endl;
+    cout << "  Kuliah    : Rp " << totKuliah    << endl;
+    cout << "  Hiburan   : Rp " << totHiburan   << endl;
+    garis();
+
+    // Total keseluruhan (rekursi)
+    int totalSemua = totalRekursif(daftar, 0);
+    cout << "  TOTAL SEMUA : Rp " << totalSemua << endl;
+    garis();
     jeda();
 }
 
 void simpanFile(){
-
+   system("cls");
     namaKelompok();
     judul("SIMPAN KE FILE");
 
