@@ -55,7 +55,7 @@ using namespace std;
 
 // Function Rekursi
     int hitungTotalPengeluaran(Transaksi arr[], int indexAwal, int banyak_data){
-        if (indexAwal >= banyak_data){
+        if (indexAwal > banyak_data){
             return 0;
         }
 
@@ -85,13 +85,13 @@ using namespace std;
         cout << " [3] Harga (Rp)           : "; 
         int tempHarga;
         cin >> tempHarga;
+        cin.ignore();
         
         if (tempHarga < 0){
             cout << "\n\t[!] HARGA TIDAK BOLEH MINUS" << endl;
             jeda();
             return;
         } else {
-            cin.ignore();
             daftar[jumlah_data].harga = tempHarga;
         }
 
@@ -101,8 +101,9 @@ using namespace std;
         cout << "     | 2. Transport  |" << endl;
         cout << "     | 3. Kuliah     |" << endl;
         cout << "     | 4. Hiburan    |" << endl;
+        cout << "     | 5. Lainnya    |" << endl;
         cout << "     =================" << endl;
-        cout << "     Pilih [1-4]          : ";
+        cout << "     Pilih [1-5]          : ";
         int pilihKategori;
         cin >> pilihKategori;
         cin.ignore();
@@ -118,12 +119,7 @@ using namespace std;
         } else {
             daftar[jumlah_data].kategori = "Lainnya";
         }
-        
-        if(jumlah_data > MAX_DATA){
-            cout << "\n\t[!] DATA SUDAH PENUH!" << endl;
-        } else {
-            jumlah_data++;
-        }
+        jumlah_data++;
         cout << endl << "\n\t[SUKSES] Transaksi berhasil disimpan!" << endl;
         jeda();
     }
@@ -163,50 +159,62 @@ using namespace std;
             return;
         }
 
-        cout << "\n Cari berdasarkan..." << endl;
-        cout << " [1] Nama Barang" << endl;
-        cout << " [2] Tanggal" << endl;
-        cout << " Pilih [1-2] : ";
-        int pilihan;
-        cin >> pilihan;
-        cin.ignore();
+        char looping;
+        do {
+            cout << "\n Cari berdasarkan..." << endl;
+            cout << " [1] Nama Barang" << endl;
+            cout << " [2] Tanggal" << endl;
+            cout << " Pilih [1-2] : ";
+            int pilihan;
+            cin >> pilihan;
+            cin.ignore();
+    
+            if (pilihan < 1 || pilihan > 2) {
+                cout << "\n\t[!] Pilihan Tidak Valid!" << endl;
+                jeda();
+                return; 
+            }
+    
+            string kataDicari;
+            cout << "\n Masukkan Kata Kunci :";
+            getline(cin, kataDicari);
+    
+            garis();
+            bool found = false;
+    
+            for (int i = 0; i < jumlah_data; i++) {
+    
+                bool cocok;
+                if (pilihan == 1){
+                    cocok = daftar[i].barang == kataDicari;
+                } else if (pilihan == 2){
+                    cocok = daftar[i].tanggal == kataDicari;
+                }
+    
+                if (cocok) {
+                    cout << "\n [BARANG "  << i+1 << "]-------------------------" << endl;
+                    cout << "   [1] Nama         : " << daftar[i].barang << endl;
+                    cout << "   [2] Tanggal Beli : " << daftar[i].tanggal << endl;
+                    cout << "   [3] Kategori     : " << daftar[i].kategori << endl;
+                    cout << "   [4] Harga (Rp)   : " << daftar[i].harga << endl;
+                    found = true;
+                }
+            }
+    
+            
 
-        string kataDicari;
-        cout << "\n Masukkan Kata Kunci :";
-        getline(cin, kataDicari);
-
-        garis();
-        bool found = false;
-
-        for (int i = 0; i < jumlah_data; i++) {
-
-            bool cocok;
-            if (pilihan == 1){
-                cocok = daftar[i].barang == kataDicari;
-            } else if (pilihan == 2){
-                cocok = daftar[i].tanggal == kataDicari;
+            if (!found){
+                cout << "\n\t[!] DATA TIDAK DITEMUKAN" << endl;
+            } else {
+                cout << "\n -----------------------------------" << endl;
+                cout
+                << "\n\t[SELESAI] SEMUA DATA TELAH DITAMPILKAN" << endl;
             }
 
-            if (cocok) {
-                cout << "\n [BARANG "  << i+1 << "]-------------------------" << endl;
-                cout << "   [1] Nama         : " << daftar[i].barang << endl;
-                cout << "   [2] Tanggal Beli : " << daftar[i].tanggal << endl;
-                cout << "   [3] Kategori     : " << daftar[i].kategori << endl;
-                cout << "   [4] Harga (Rp)   : " << daftar[i].harga << endl;
-                found = true;
-            }
-        }
-
-        if (!found){
-            cout << "\n\t[!] DATA TIDAK DITEMUKAN" << endl;
-            jeda();
-            return;
-        } else {
-            cout << "\n -----------------------------------" << endl;
-            cout << "\n\t[SELESAI] SEMUA DATA TELAH DITAMPILKAN" << endl;
-        }
-
-        jeda();
+            cout << "\n\tCari Transaksi Lain? [Y/N] : ";
+            cin >> looping;
+            cin.ignore();
+        } while (looping == 'Y' || looping == 'y');
     }
 
     // Function Sorting
@@ -227,21 +235,24 @@ using namespace std;
         cin >> pilihan;
         cin.ignore();
 
+        if (pilihan < 1 || pilihan > 3) {
+            cout << "\n\t[!] Pilihan Tidak Valid!" << endl;
+            jeda();
+            return;
+        }
+
         //Bubble sort 
-        int temp;
         for (int i = 0; i < jumlah_data - 1; i++) {\
             for (int j = 0; j < jumlah_data - i - 1; j++){
                 bool kondisi = false;
 
                 if (pilihan == 1) {
                     kondisi = (daftar[j].harga > daftar[j+1].harga);
-                } 
-                else if (pilihan == 2) {
+                } else if (pilihan == 2) {
                     kondisi = (daftar[j].harga < daftar[j+1].harga);
-                } 
-                else if (pilihan == 3) { 
+                } else if (pilihan == 3) { 
                     kondisi = (daftar[j].tanggal > daftar[j+1].tanggal);
-                }
+                } 
 
                 if (kondisi) {
                     Transaksi temp = daftar[j];
@@ -250,6 +261,7 @@ using namespace std;
                 }
             }
         }
+
         cout << endl << "\n\t[SUKSES] DATA TELAH DIURUTKAN" << endl;
         jeda();
     }
@@ -261,9 +273,9 @@ using namespace std;
             cout << "\n\t[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
             jeda();
             return;
-        }
+        } 
 
-        int totMakanan = 0, totTransport = 0, totKuliah = 0, totHiburan = 0;
+        int totMakanan = 0, totTransport = 0, totKuliah = 0, totHiburan = 0, totLainnya = 0;
 
         for (int i = 0; i < jumlah_data; i++){
             if (daftar[i].kategori == "Makanan"){
@@ -274,6 +286,8 @@ using namespace std;
                 totKuliah    += daftar[i].harga;
             }else if (daftar[i].kategori == "Hiburan"){
                 totHiburan   += daftar[i].harga;
+            }else if (daftar[i].kategori == "Lainnya"){
+                totLainnya   += daftar[i].harga;
             };
         }
 
@@ -282,6 +296,7 @@ using namespace std;
         cout << "   [*] Transport : Rp " << totTransport << endl;
         cout << "   [*] Kuliah    : Rp " << totKuliah    << endl;
         cout << "   [*] Hiburan   : Rp " << totHiburan   << endl;
+        cout << "   [*] Lainnya   : Rp " << totLainnya   << endl;
         garis();
 
         // Total keseluruhan (rekursi)
@@ -331,6 +346,8 @@ using namespace std;
             jeda();
             return;
         }
+
+        string tempHarga;
         
         jumlah_data = 0;
         while(getline(bacaFile, daftar[jumlah_data].barang, ',')){
@@ -342,11 +359,18 @@ using namespace std;
 
             getline(bacaFile, daftar[jumlah_data].tanggal, ',');
             getline(bacaFile, daftar[jumlah_data].kategori, ',');
-            bacaFile >> daftar[jumlah_data].harga;
 
-            bacaFile.ignore();
+            getline(bacaFile, tempHarga);
+
+            // Jika Temp Harga Tidak Kosong Maka Konversi ke int
+            if(!tempHarga.empty()){
+                daftar[jumlah_data].harga = stoi(tempHarga);
+            }
+            
             jumlah_data++;
         }
+
+        bacaFile.close();
         
         // jika selesai membaca file tapi tidak ada isinya
         if (jumlah_data == 0){
@@ -377,7 +401,7 @@ using namespace std;
             cout << "  [6] Simpan ke File" << endl;
             cout << "  [7] Load dari File" << endl;
             cout << "  [0] Keluar" << endl;
-            cout << "\n  Pilih menu [1-9]: ";
+            cout << "\n  Pilih menu [0-7]: ";
             cin >> pilih;
             cin.ignore();
 
