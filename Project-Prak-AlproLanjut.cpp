@@ -46,7 +46,7 @@ using namespace std;
 
 // Function Rekursi
     int hitungTotalPengeluaran(Transaksi arr[], int indexAwal, int banyak_data){
-        if (indexAwal > banyak_data){
+        if (indexAwal >= banyak_data){
             return 0;
         }
 
@@ -68,7 +68,7 @@ using namespace std;
         cout << "\n [1] Nama barang          : "; 
         getline(cin, daftar[jumlah_data].barang);
         
-        cout << " [2] Tanggal [DD-MM-YYYY] : "; 
+        cout << " [2] Tanggal [YYYY-MM-DD] : "; 
         getline(cin, daftar[jumlah_data].tanggal);
 
         cout << " [3] Harga (Rp)           : "; 
@@ -109,7 +109,7 @@ using namespace std;
         
         judul("DAFTAR TRANSAKSI");
         if (jumlah_data == 0) {
-            cout << "[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
+            cout << "\n\t[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
             jeda();
             return;
         }
@@ -134,7 +134,7 @@ using namespace std;
     void cariTransaksi(){
         judul("CARI TRANSAKSI");
         if (jumlah_data == 0) {
-            cout << "[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
+            cout << "\n\t[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
             jeda();
             return;
         }
@@ -174,7 +174,7 @@ using namespace std;
         }
 
         if (!found){
-            cout << "\n[!] DATA TIDAK DITEMUKAN" << endl;
+            cout << "\n\t[!] DATA TIDAK DITEMUKAN" << endl;
             jeda();
             return;
         } else {
@@ -189,7 +189,7 @@ using namespace std;
     void urutkanTransaksi(){
         judul("URUTKAN TRANSAKSI");
         if (jumlah_data == 0) {
-            cout << "[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
+            cout << "\n\t[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
             jeda();
             return;
         }
@@ -206,7 +206,7 @@ using namespace std;
         //Bubble sort 
         int temp;
         for (int i = 0; i < jumlah_data - 1; i++) {\
-            for (int j = 0; j < jumlah_data - 1 - 1; j++){
+            for (int j = 0; j < jumlah_data - i - 1; j++){
                 bool kondisi = false;
 
                 if (pilihan == 1) {
@@ -234,7 +234,7 @@ using namespace std;
     void analisisPengeluaran(){
         judul("ANALISIS PENGELUARAN");
         if (jumlah_data == 0) {
-            cout << "[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
+            cout << "\n\t[!] BELUM ADA DATA - Input terlebih dulu..." << endl;
             jeda();
             return;
         }
@@ -276,7 +276,7 @@ using namespace std;
             return;
         }
 
-        ofstream simpanFile("catatan_keuangan.txt", ios::app);
+        ofstream simpanFile("catatan_keuangan.txt");
         if(!simpanFile.is_open()){
             cout << "\n\t[!] File Gagal Dibuat/Ditulis" << endl;
             jeda();
@@ -307,37 +307,20 @@ using namespace std;
             jeda();
             return;
         }
-
-        // for (int i = 0; i < jumlah_data; i++){
-        //     char koma;
-        //     char karakter;
-
-        //     string tempBarang = "";
-        //     while(bacaFile.get(karakter) && karakter != ','){
-        //         tempBarang += karakter;
-        //     }
-        //     daftar[i].barang = tempBarang;
-
-        //     string tempTanggal = "";
-        //     while(bacaFile.get(karakter) && karakter != ','){
-        //         tempTanggal += karakter;
-        //     }
-        //     daftar[i].barang = tempTanggal;
-
-        //     string tempKategori = "";
-        //     while(bacaFile.get(karakter) && karakter != ','){
-        //         tempKategori += karakter;
-        //     }
-        //     daftar[i].barang = tempKategori;
-
-        //     bacaFile >> koma >> daftar[i].harga;
-
-        //     jumlah_data++;
-        // }
         
-        bacaFile.ignore();
+        jumlah_data = 0;
+        while(getline(bacaFile, daftar[jumlah_data].barang, ',')){
 
+            getline(bacaFile, daftar[jumlah_data].tanggal, ',');
+            getline(bacaFile, daftar[jumlah_data].kategori, ',');
+            bacaFile >> daftar[jumlah_data].harga;
+
+            bacaFile.ignore();
+            jumlah_data++;
+        }
+        
         cout << "\n\t[SUKSES] Berhasil Membaca File \"catatan_keuangan.txt\"" << endl;
+
         jeda();
     }
 
