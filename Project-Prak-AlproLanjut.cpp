@@ -44,6 +44,15 @@ using namespace std;
         cin.get();
     }
 
+// Function Pointer
+    void cekApakahKosong(int *jumlah, bool *isFull) {
+        if (*jumlah >= MAX_DATA) {
+            *isFull = true;
+        } else {
+            *isFull = false;
+        }
+    }
+
 // Function Rekursi
     int hitungTotalPengeluaran(Transaksi arr[], int indexAwal, int banyak_data){
         if (indexAwal >= banyak_data){
@@ -59,7 +68,9 @@ using namespace std;
         
         judul("INPUT TRANSAKSI BARU");
 
-        if (jumlah_data >= MAX_DATA) {
+        bool statusPenuh;
+        cekApakahKosong(&jumlah_data, &statusPenuh);
+        if (statusPenuh) {
             cout << "\n\t[!] DATA SUDAH PENUH" << endl;
             jeda();
             return;
@@ -73,15 +84,14 @@ using namespace std;
 
         cout << " [3] Harga (Rp)           : "; 
         int tempHarga;
+        cin >> tempHarga;
         
         if (tempHarga < 0){
             cout << "\n\t[!] HARGA TIDAK BOLEH MINUS" << endl;
             jeda();
             return;
         } else {
-            cin >> tempHarga;
             cin.ignore();
-
             daftar[jumlah_data].harga = tempHarga;
         }
 
