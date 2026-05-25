@@ -72,8 +72,18 @@ using namespace std;
         getline(cin, daftar[jumlah_data].tanggal);
 
         cout << " [3] Harga (Rp)           : "; 
-        cin >> daftar[jumlah_data].harga;
-        cin.ignore();
+        int tempHarga;
+        
+        if (tempHarga < 0){
+            cout << "\n\t[!] HARGA TIDAK BOLEH MINUS" << endl;
+            jeda();
+            return;
+        } else {
+            cin >> tempHarga;
+            cin.ignore();
+
+            daftar[jumlah_data].harga = tempHarga;
+        }
 
         cout << " [4] Kategori             " << endl;
         cout << "     =================" << endl;
@@ -99,7 +109,11 @@ using namespace std;
             daftar[jumlah_data].kategori = "Lainnya";
         }
         
-        jumlah_data++;
+        if(jumlah_data > MAX_DATA){
+            cout << "\n\t[!] DATA SUDAH PENUH!" << endl;
+        } else {
+            jumlah_data++;
+        }
         cout << endl << "\n\t[SUKSES] Transaksi berhasil disimpan!" << endl;
         jeda();
     }
@@ -311,6 +325,11 @@ using namespace std;
         jumlah_data = 0;
         while(getline(bacaFile, daftar[jumlah_data].barang, ',')){
 
+            // untuk skip bila baris kosong
+            if(daftar[jumlah_data].barang.empty() || daftar[jumlah_data].barang == "\n"){
+                continue;
+            }
+
             getline(bacaFile, daftar[jumlah_data].tanggal, ',');
             getline(bacaFile, daftar[jumlah_data].kategori, ',');
             bacaFile >> daftar[jumlah_data].harga;
@@ -319,7 +338,14 @@ using namespace std;
             jumlah_data++;
         }
         
-        cout << "\n\t[SUKSES] Berhasil Membaca File \"catatan_keuangan.txt\"" << endl;
+        // jika selesai membaca file tapi tidak ada isinya
+        if (jumlah_data == 0){
+            cout << "\n\t[!] Tidak Ada Data Dalam File \"catatan_keuangan.txt\"" << endl;
+            jeda();
+            return;
+        } else {
+            cout << "\n\t[SUKSES] Membaca File \"catatan_keuangan.txt\"" << endl;
+        }
 
         jeda();
     }
